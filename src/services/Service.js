@@ -31,7 +31,7 @@ class Service {
         .find(query)
         .skip(skip)
         .limit(limit);
-      let total = await this.model.count();
+      let total = await this.model.countDocuments();
 
       return {
         error: false,
@@ -70,6 +70,13 @@ class Service {
   async update(id, data) {
     try {
       let item = await this.model.findByIdAndUpdate(id, data, { new: true });
+      if (!item)
+        return {
+          error: true,
+          statusCode: 404,
+          message: "item not found"
+        };
+
       return {
         error: false,
         statusCode: 202,
